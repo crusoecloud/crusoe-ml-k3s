@@ -1,0 +1,94 @@
+apiVersion: kubeflow.org/v2beta1
+kind: MPIJob
+metadata:
+  name: nccl-tests-gdr-16
+spec:
+  slotsPerWorker: 8
+  runPolicy:
+    cleanPodPolicy: Running
+  mpiReplicaSpecs:
+    Launcher:
+      replicas: 1
+      template:
+         spec:
+          restartPolicy: OnFailure
+          initContainers:
+          - image: crusoecloud/nccl-tests:h100-23.10-py3
+            name: init
+            command: ["sh", "-c", "sleep 5"]
+          containers:
+          - image: crusoecloud/nccl-tests:h100-23.10-py3
+            imagePullPolicy: Always
+            name: nccl-test-launcher
+            env:
+             - name: NCCL_TOPO_FILE
+               value: /opt/h100-80gb-sxm-ib.xml
+            command:
+            - /opt/hpcx/ompi/bin/mpirun
+            - --allow-run-as-root
+            - --tag-output
+            - -np
+            - "16"
+            - -bind-to
+            - none
+            - -map-by
+            - slot
+            - -mca 
+            - coll_hcoll_enable 
+            - "0"
+            - -x 
+            - NCCL_IB_PCI_RELAXED_ORDERING=1
+            - -x 
+            - NCCL_IB_SPLIT_DATA_ON_QPS=0
+            - -x 
+            - NCCL_IB_QPS_PER_CONNECTION=2
+            - -x
+            - NCCL_TOPO_FILE
+            - -x
+            - PATH
+            - -x
+            - LD_LIBRARY_PATH
+            - -x
+            - NCCL_DEBUG=INFO
+            - -x
+            - NCCL_ALGO=RING
+            - /opt/nccl-tests/build/all_reduce_perf
+            - -b
+            - "8"
+            - -e
+            - 2G
+            - -f
+            - "2"
+            - -t
+            - "1"
+            - -g
+            - "1"
+            - -c
+            - "1"
+            - -n
+            - "100"
+    Worker:
+      replicas: 2
+      template:
+        spec:
+          runtimeClassName: nvidia
+          volumes:
+          - name: dshm
+            emptyDir:
+              medium: Memory
+          containers:
+          - image: crusoecloud/nccl-tests:h100-23.10-py3
+            imagePullPolicy: Always
+            name: nccl-worker
+            volumeMounts:
+            - mountPath: /dev/shm
+              name: dshm
+            resources:
+              limits:
+                nvidia.com/gpu: 8
+                nvidia.com/hostdev: 8
+                memory: 120000Mi
+              requests:
+                nvidia.com/gpu: 8
+                nvidia.com/hostdev: 8
+                memory: 120000Mi
