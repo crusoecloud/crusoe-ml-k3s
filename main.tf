@@ -7,11 +7,11 @@ terraform {
 }
 
 locals {
-  my_ssh_privkey_path="/Users/amrragab/.ssh/id_ed25519"
-  my_ssh_pubkey="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIdc3Aaj8RP7ru1oSxUuehTRkpYfvxTxpvyJEZqlqyze amrragab@MBP-Amr-Ragab.local"
+  my_ssh_privkey_path="</path/to/priv.key>"
+  my_ssh_pubkey="<pub-key>"
   worker_instance_type = "h100-80gb-sxm-ib.8x"
   worker_image = "ubuntu22.04-nvidia-sxm-docker:latest"
-  ib_partition_id = "6dcef748-dc30-49d8-9a0b-6ac87a27b4f8"
+  ib_partition_id = "<ib_partition_id>"
   count_workers = 2
   headnode_instance_type="c1a.8x"
   deploy_location = "us-east1-a"
