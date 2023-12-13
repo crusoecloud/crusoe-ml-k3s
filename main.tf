@@ -170,7 +170,7 @@ resource "null_resource" "copy-lb-file" {
 
 resource "crusoe_compute_instance" "workers" {
     depends_on = [crusoe_compute_instance.k3s_lb]
-    count= local.count_workers
+    count = local.count_workers
     name = "crusoe-k3s-worker-${count.index}"
     type = local.worker_instance_type
     ssh_key = local.my_ssh_pubkey

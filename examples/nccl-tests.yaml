@@ -52,7 +52,7 @@ spec:
             - NCCL_DEBUG=INFO
             - -x
             - NCCL_ALGO=RING
-            - /opt/nccl-tests/build/all_reduce_perf
+            - /opt/nccl-tests/build/broadcast_perf
             - -b
             - "8"
             - -e
