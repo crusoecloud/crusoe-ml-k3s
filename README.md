@@ -23,5 +23,5 @@ And then apply, to provision resources
 terraform init
 terraform plan
 terraform apply
-``
+```
 
