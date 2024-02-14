@@ -1,7 +1,7 @@
 # Rancher K3s Deployment on Crusoe Cloud
 
 ## Known Issues
-At the moment there is a known issue with CPU instances on Crusoe Cloud where networking may not be functioning at boot. This impacts SSH/Terraform and the bootstraps scripts. If the Terraform below fails contact support@crusoecloud.com for help.
+If the Terraform below fails contact support@crusoecloud.com for help.
 
 ## Deployment
 Modify the `locals` in the `main.tf` resource YAML file.
